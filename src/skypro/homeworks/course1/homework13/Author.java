@@ -2,8 +2,8 @@ package skypro.homeworks.course1.homework13;
 
 public class Author {
 
-    private String firstName;
-    private String lastName;
+    private final String firstName;
+    private final String lastName;
 
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
@@ -18,4 +18,11 @@ public class Author {
         return this.lastName;
     }
 
+    @Override
+    public String toString() {
+        return "Автор{" +
+                "имя='" + firstName + '\'' +
+                ", фамилия='" + lastName + '\'' +
+                '}';
+    }
 }

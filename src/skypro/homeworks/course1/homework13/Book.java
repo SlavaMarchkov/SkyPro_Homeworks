@@ -2,8 +2,8 @@ package skypro.homeworks.course1.homework13;
 
 public class Book {
 
-    private String title;
-    private Author author;
+    private final String title;
+    private final Author author;
     private int issueYear;
 
     public Book(String title, Author author, int issueYear) {

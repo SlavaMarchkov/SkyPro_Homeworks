@@ -9,5 +9,9 @@ public class App {
         Book generationP = new Book("Generation «П»", viktorPelevin, 1998);
 
         generationP.setIssueYear(1999);
+
+        // print out Author
+        System.out.println(stephenKing); // Автор{имя='Stephen', фамилия='King'}
+        System.out.println(viktorPelevin); // Автор{имя='Viktor', фамилия='Pelevin'}
     }
 }
