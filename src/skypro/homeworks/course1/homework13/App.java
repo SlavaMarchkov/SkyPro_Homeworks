@@ -24,5 +24,12 @@ public class App {
 
         Author stevenKing = new Author("Stephen", "King");
         System.out.println(stephenKing.equals(stevenKing)); // true
+
+        Book heartsInAtlantis2 = new Book("Hearts In Atlantis", stevenKing, 2005);
+        System.out.println(heartsInAtlantis2.equals(heartsInAtlantis)); // true
+
+        Book heartsInAtlantis3 = new Book("Hearts In Atlantis", viktorPelevin, 1997);
+        System.out.println(heartsInAtlantis3.equals(heartsInAtlantis)); // false
+        System.out.println(generationP.equals(heartsInAtlantis3)); // false
     }
 }
