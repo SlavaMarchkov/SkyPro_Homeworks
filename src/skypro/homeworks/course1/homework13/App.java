@@ -13,5 +13,9 @@ public class App {
         // print out Author
         System.out.println(stephenKing); // Автор{имя='Stephen', фамилия='King'}
         System.out.println(viktorPelevin); // Автор{имя='Viktor', фамилия='Pelevin'}
+
+        // print out Book
+        System.out.println(heartsInAtlantis);
+        System.out.println(generationP);
     }
 }

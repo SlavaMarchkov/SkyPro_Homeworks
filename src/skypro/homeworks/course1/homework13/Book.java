@@ -28,4 +28,12 @@ public class Book {
         this.issueYear = issueYear;
     }
 
+    @Override
+    public String toString() {
+        return "Книга{" +
+                "название='" + title + '\'' +
+                ", " + author +
+                ", год издания=" + issueYear +
+                '}';
+    }
 }
