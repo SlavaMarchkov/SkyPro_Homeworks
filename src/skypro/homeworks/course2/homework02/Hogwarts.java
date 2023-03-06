@@ -2,7 +2,7 @@ package skypro.homeworks.course2.homework02;
 
 import java.util.Random;
 
-abstract public class Hogwarts {
+public abstract class Hogwarts {
     private final String name;
     private final int powerOfMagic; // мощность в баллах
     private final int moveDistance; // расстояние трансгрессии
