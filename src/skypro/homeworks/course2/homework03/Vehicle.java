@@ -24,24 +24,4 @@ public abstract class Vehicle implements Serviceable {
     public void setWheelsCount(int wheelsCount) {
         this.wheelsCount = wheelsCount;
     }
-
-    @Override
-    public void updateTyre(Vehicle vehicle) {
-        System.out.println("Меняем покрышку у " + vehicle.getModelName());
-    }
-
-    @Override
-    public void checkEngine(Car car) {
-        System.out.println("Проверяем двигатель у " + car.getModelName());
-    }
-
-    @Override
-    public void checkEngine(Truck truck) {
-        System.out.println("Проверяем двигатель у " + truck.getModelName());
-    }
-
-    @Override
-    public void checkTrailer(Truck truck) {
-        System.out.println("Проверяем прицеп у " + truck.getModelName());
-    }
 }
