@@ -6,7 +6,13 @@ public class Bicycle extends Vehicle {
     }
 
     @Override
-    public void updateTyre() {
-        System.out.println("Меняем покрышку");
+    public void service() {
+        updateTyre();
+    }
+
+    private void updateTyre() {
+        for (int i = 0; i < this.getWheelsCount(); i++) {
+            System.out.println("Меняем покрышку");
+        }
     }
 }

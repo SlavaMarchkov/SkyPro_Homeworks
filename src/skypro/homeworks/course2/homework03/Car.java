@@ -5,7 +5,13 @@ public class Car extends Bicycle {
         super(modelName, wheelsCount);
     }
 
-    public void checkEngine() {
+    @Override
+    public void service() {
+        super.service();
+        checkEngine();
+    }
+
+    private void checkEngine() {
         System.out.println("Проверяем двигатель");
     }
 }
