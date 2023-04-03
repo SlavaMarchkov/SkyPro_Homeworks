@@ -6,6 +6,7 @@ public class Main {
     public static void main(String[] args) {
         task1();
         task2();
+        task3();
     }
 
     private static void task1() {
@@ -49,6 +50,18 @@ public class Main {
 
         for (Integer num : sortedUniqueEvenNums) {
             System.out.print(num + " ");
+        }
+
+        System.out.println();
+    }
+
+    private static void task3() {
+        // выводит в консоль все уникальные слова из списка слов, в котором могут встречаться дубли
+        List<String> words = List.of("cat", "food", "dog", "cat", "eat", "Bob", "Bill", "Bob", "dog");
+        Set<String> uniqueWords = new HashSet<>(words);
+
+        for (String word : uniqueWords) {
+            System.out.print(word + " ");
         }
 
         System.out.println();
