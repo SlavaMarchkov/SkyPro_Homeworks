@@ -29,6 +29,8 @@ public class Main {
             }
         }
 
+        /*
+        // Вариант с циклом по ArrayList
         Collections.sort(evenNums);
 
         for (int i = 0; i < evenNums.size() - 1; i++) {
@@ -37,7 +39,17 @@ public class Main {
             }
             System.out.print(evenNums.get(i) + " ");
         }
-        System.out.print(evenNums.get(evenNums.size() - 1));
+        System.out.print(evenNums.get(evenNums.size() - 1));*/
+
+        // Вариант с Set
+        Set<Integer> uniqueEvenNums = new HashSet<>(evenNums);
+
+        List<Integer> sortedUniqueEvenNums = new ArrayList<>(uniqueEvenNums);
+        Collections.sort(sortedUniqueEvenNums);
+
+        for (Integer num : sortedUniqueEvenNums) {
+            System.out.print(num + " ");
+        }
 
         System.out.println();
     }
