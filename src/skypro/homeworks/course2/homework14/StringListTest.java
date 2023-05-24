@@ -7,9 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import skypro.homeworks.course2.homework14.exceptions.ElementNotFoundException;
-import skypro.homeworks.course2.homework14.exceptions.IndexOverBoundsException;
-import skypro.homeworks.course2.homework14.exceptions.LimitReachedException;
+import skypro.homeworks.course2.homework14.exceptions.InvalidIndexException;
+import skypro.homeworks.course2.homework14.exceptions.StorageIsFullException;
 
 import java.util.stream.Stream;
 
@@ -25,15 +24,6 @@ class StringListTest {
                 Arguments.of("Item2", 1),
                 Arguments.of("Item3", 2),
                 Arguments.of("Item4", 3)
-        );
-    }
-
-    public static Stream<Arguments> lastIndexOfParams() {
-        return Stream.of(
-                Arguments.of("Item1", 3),
-                Arguments.of("Item2", 2),
-                Arguments.of("Item3", 1),
-                Arguments.of("Item4", 0)
         );
     }
 
@@ -72,21 +62,21 @@ class StringListTest {
     @DisplayName("Должен выбросить исключение при добавлении элемента по неверному индексу")
     void addItemByWrongIndexTest() {
         String newElement = "Item5";
-        assertThrows(IndexOverBoundsException.class, () -> out.add(10, newElement));
+        assertThrows(InvalidIndexException.class, () -> out.add(10, newElement));
     }
 
     @Test
     @DisplayName("Должен выбросить исключение при превышении размера")
     void addItemsOverLimitTest() {
         out.add("Item5");
-        assertThrows(LimitReachedException.class, () -> out.add("Item Over Limit"));
+        assertThrows(StorageIsFullException.class, () -> out.add("Item Over Limit"));
     }
 
     @Test
     @DisplayName("Должен выбросить исключение при превышении размера при добавлении элемента по индексу")
     void addItemByIndexOverLimitTest() {
         out.add("Item5");
-        assertThrows(LimitReachedException.class, () -> out.add(2, "Item Over Limit"));
+        assertThrows(StorageIsFullException.class, () -> out.add(2, "Item Over Limit"));
     }
 
     @Test
@@ -99,7 +89,7 @@ class StringListTest {
     @Test
     @DisplayName("Должен выбросить исключение при замене элемента по неверному индексу")
     void setWrongIndexTest() {
-        assertThrows(IndexOverBoundsException.class, () -> out.set(12, "New Item"));
+        assertThrows(InvalidIndexException.class, () -> out.set(12, "New Item"));
     }
 
     @Test
@@ -121,13 +111,13 @@ class StringListTest {
     @Test
     @DisplayName("Должен выбросить исключение при удалении элемента по неверному индексу")
     void removeItemByWrongIndexTest() {
-        assertThrows(ElementNotFoundException.class, () -> out.remove(10));
+        assertThrows(InvalidIndexException.class, () -> out.remove(10));
     }
 
     @Test
     @DisplayName("Должен выбросить исключение при удалении элемента по неверному значению")
     void removeItemByWrongValueTest() {
-        assertThrows(ElementNotFoundException.class, () -> out.remove("Item10"));
+        assertThrows(InvalidIndexException.class, () -> out.remove("Item10"));
     }
 
     @Test
@@ -151,7 +141,7 @@ class StringListTest {
 
     @ParameterizedTest
     @DisplayName("Должен показать индекс элемента с конца")
-    @MethodSource("lastIndexOfParams")
+    @MethodSource("indexOfParams")
     void lastIndexOfTest(String search, int index) {
         assertEquals(out.lastIndexOf(search), index);
     }
@@ -171,7 +161,7 @@ class StringListTest {
     @Test
     @DisplayName("Должен бросить исключение при получении элемента по неверному индексу")
     void getByWrongIndexTest() {
-        assertThrows(IndexOverBoundsException.class, () -> out.get(10));
+        assertThrows(InvalidIndexException.class, () -> out.get(10));
     }
 
     @Test

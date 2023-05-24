@@ -1,24 +1,23 @@
 package skypro.homeworks.course2.homework14;
 
 
-import skypro.homeworks.course2.homework14.exceptions.ElementNotFoundException;
-import skypro.homeworks.course2.homework14.exceptions.IndexOverBoundsException;
-import skypro.homeworks.course2.homework14.exceptions.LimitReachedException;
-import skypro.homeworks.course2.homework14.exceptions.NullParameterException;
+import skypro.homeworks.course2.homework14.exceptions.InvalidIndexException;
+import skypro.homeworks.course2.homework14.exceptions.NullItemException;
+import skypro.homeworks.course2.homework14.exceptions.StorageIsFullException;
 
 import java.util.Arrays;
 
 public class StringListImpl implements StringList {
 
-    private int count;
-    private final String[] result;
+    private int size;
+    private final String[] storage;
 
     public StringListImpl() {
         this(5);
     }
 
-    public StringListImpl(int size) {
-        result = new String[size];
+    public StringListImpl(int initSize) {
+        storage = new String[initSize];
     }
 
     /**
@@ -29,11 +28,10 @@ public class StringListImpl implements StringList {
      */
     @Override
     public String add(final String item) {
-        if (count < result.length) {
-            result[count++] = item;
-            return item;
-        }
-        throw new LimitReachedException("Limit reached");
+        validateSize();
+        validateItem(item);
+        storage[size++] = item;
+        return item;
     }
 
     /**
@@ -46,18 +44,18 @@ public class StringListImpl implements StringList {
      */
     @Override
     public String add(final int index, final String item) {
-        if (index >= result.length) {
-            throw new IndexOverBoundsException("Wrong index");
-        }
-        if (count < result.length) {
-            count++;
-            for (int i = count - 1; i > index; i--) {
-                result[i] = result[i - 1];
-            }
-            result[index] = item;
+        validateSize();
+        validateItem(item);
+        validateIndex(index);
+        if (index == size) {
+            storage[size++] = item;
             return item;
         }
-        throw new LimitReachedException("Limit reached");
+        // сдвиг элементов массива вправо
+        System.arraycopy(storage, index, storage, index + 1, size - index);
+        storage[index] = item;
+        size++;
+        return item;
     }
 
     /**
@@ -65,15 +63,14 @@ public class StringListImpl implements StringList {
      * Выбрасывает исключение, если индекс больше фактического количества элементов или выходит за пределы массива.
      *
      * @param index int
-     * @param item String
+     * @param item  String
      * @return String
      */
     @Override
     public String set(final int index, final String item) {
-        if (index >= result.length) {
-            throw new IndexOverBoundsException("Wrong index");
-        }
-        result[index] = item;
+        validateIndex(index);
+        validateItem(item);
+        storage[index] = item;
         return item;
     }
 
@@ -86,11 +83,9 @@ public class StringListImpl implements StringList {
      */
     @Override
     public String remove(final String item) {
+        validateItem(item);
         int index = indexOf(item);
-        if (index != -1) {
-            return remove(index);
-        }
-        throw new ElementNotFoundException("Element '" + item + "' not found");
+        return remove(index);
     }
 
     /**
@@ -102,16 +97,22 @@ public class StringListImpl implements StringList {
      */
     @Override
     public String remove(final int index) {
-        String removed;
-        if (index < count - 1) {
-            removed = result[index];
-            for (int i = index; i < count - 1; i++) {
-                result[i] = result[i + 1];
-            }
-            count--;
-            return removed;
+        validateIndex(index);
+        String item = storage[index];
+        if (index != size) {
+            // сдвиг элементов массива влево
+            size--;
+            System.arraycopy(storage, index + 1, storage, index, size - 1);
         }
-        throw new ElementNotFoundException("Element with index " + index + " not found");
+
+        /*String item = storage[index];
+
+        for (int i = index; i < size - 1; i++) {
+            storage[i] = storage[i + 1];
+        }
+        size--;*/
+
+        return item;
     }
 
     /**
@@ -126,7 +127,7 @@ public class StringListImpl implements StringList {
     }
 
     /**
-     * Выполняет поиск элемента по его значению.
+     * Выполняет поиск индекса элемента по его значению.
      * Возвращает индекс элемента или -1 в случае отсутствия.
      *
      * @param item String
@@ -134,8 +135,8 @@ public class StringListImpl implements StringList {
      */
     @Override
     public int indexOf(final String item) {
-        for (int i = 0; i < count; i++) {
-            if (result[i].equals(item)) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].equals(item)) {
                 return i;
             }
         }
@@ -143,7 +144,7 @@ public class StringListImpl implements StringList {
     }
 
     /**
-     * Выполняет поиск элемента с конца.
+     * Выполняет поиск индекса элемента с конца.
      * Возвращает индекс элемента или -1 в случае отсутствия.
      *
      * @param item String
@@ -151,9 +152,9 @@ public class StringListImpl implements StringList {
      */
     @Override
     public int lastIndexOf(final String item) {
-        for (int i = 0; i < count; i++) {
-            if (result[i].equals(item)) {
-                return count - 1 - i;
+        for (int i = size - 1; i >= 0; i--) {
+            if (storage[i].equals(item)) {
+                return i;
             }
         }
         return -1;
@@ -168,10 +169,8 @@ public class StringListImpl implements StringList {
      */
     @Override
     public String get(final int index) {
-        if (index > count) {
-            throw new IndexOverBoundsException("Wrong index");
-        }
-        return result[index];
+        validateIndex(index);
+        return storage[index];
     }
 
     /**
@@ -181,7 +180,7 @@ public class StringListImpl implements StringList {
      */
     @Override
     public int size() {
-        return count;
+        return size;
     }
 
     /**
@@ -191,7 +190,7 @@ public class StringListImpl implements StringList {
      */
     @Override
     public boolean isEmpty() {
-        return count == 0;
+        return size == 0;
     }
 
     /**
@@ -199,7 +198,7 @@ public class StringListImpl implements StringList {
      */
     @Override
     public void clear() {
-        count = 0;
+        size = 0;
     }
 
     /**
@@ -209,38 +208,37 @@ public class StringListImpl implements StringList {
      */
     @Override
     public String[] toArray() {
-        return Arrays.copyOf(result, count);
+        return Arrays.copyOf(storage, size);
     }
 
     /**
      * Сравнивает текущий список с другим.
      * Возвращает true/false или бросает исключение, если передан null.
      *
-     * @param o StringList
+     * @param otherList StringList
      * @return boolean
      */
     @Override
-    public boolean equals(final StringList o) {
-        if (o == null) {
-            throw new NullParameterException("Parameter Is Null");
-        }
-
-        if (this == o) return true;
-
-        if (getClass() != o.getClass()) return false;
-
-        final StringListImpl that = (StringListImpl) o;
-
-        if (count != that.count) return false;
-
-        return Arrays.equals(result, that.result);
+    public boolean equals(final StringList otherList) {
+        return Arrays.equals(this.toArray(), otherList.toArray());
     }
 
-    @Override
-    public int hashCode() {
-        int result1 = count;
-        result1 = 31 * result1 + Arrays.hashCode(result);
-        return result1;
+    private void validateItem(String item) {
+        if (item == null) {
+            throw new NullItemException("Item is null");
+        }
+    }
+
+    private void validateSize() {
+        if (size == storage.length) {
+            throw new StorageIsFullException("Storage is full");
+        }
+    }
+
+    private void validateIndex(int index) {
+        if (index < 0 || index > size) {
+            throw new InvalidIndexException("Invalid index");
+        }
     }
 
 }

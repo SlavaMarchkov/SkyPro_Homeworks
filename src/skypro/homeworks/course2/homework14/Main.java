@@ -21,7 +21,7 @@ public class Main {
         otherList.add("Item 3");
         otherList.add("Item 4");
 
-        System.out.println(stringList.add(4, "Item 1-1"));
+        System.out.println(stringList.add(2, "Item 1-1"));
 
         // замена элемента set
         System.out.println(stringList.set(3, "New Item"));
