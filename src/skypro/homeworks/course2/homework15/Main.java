@@ -27,7 +27,8 @@ public class Main {
 
 //        System.out.println(integerList.get(2));
 
-//        System.out.println(integerList.remove(256));
+        System.out.println(integerList.remove(Integer.valueOf(952)));
+        System.out.println(integerList.remove(1));
 //        System.out.println(integerList.remove(null));
 
         System.out.println(Arrays.toString(integerList.toArray()));

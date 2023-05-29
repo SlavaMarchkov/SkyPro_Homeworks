@@ -132,10 +132,9 @@ class IntegerListImplTest {
 
     @Test
     @DisplayName("Должен удалить элемент по значению")
-    @Disabled
     void removeItemByValueTest() {
         int beforeRemove = out.size();
-        assertEquals(97, out.remove(97));
+        assertEquals(97, out.remove(Integer.valueOf(97)));
         assertEquals(out.size(), beforeRemove - 1);
     }
 

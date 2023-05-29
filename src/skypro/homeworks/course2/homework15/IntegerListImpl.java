@@ -67,17 +67,18 @@ public class IntegerListImpl implements IntegerList {
     public Integer remove(final int index) {
         validateIndex(index);
         Integer item = storage[index];
-        if (index != size) {
-            size--;
-            System.arraycopy(storage, index + 1, storage, index, size - 1);
+        for (int i = index; i < size - 1; i++) {
+            storage[i] = storage[i + 1];
         }
+        size--;
         return item;
     }
 
     @Override
     public boolean contains(final Integer item) {
-        insertionSorting();
-        return binarySearch(item);
+        Integer[] storageCopy = toArray();
+        insertionSorting(storageCopy);
+        return binarySearch(storageCopy, item);
     }
 
     @Override
@@ -155,34 +156,34 @@ public class IntegerListImpl implements IntegerList {
     }
 
     private void validateIndex(int index) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new InvalidIndexException("Invalid index");
         }
     }
 
-    private void insertionSorting() {
+    private void insertionSorting(Integer[] arr) {
         int in, out;
-        for (out = 1; out < size; out++) {
-            Integer temp = storage[out];
+        for (out = 1; out < arr.length; out++) {
+            Integer temp = arr[out];
             in = out;
-            while (in > 0 && storage[in - 1] >= temp) {
-                storage[in] = storage[in - 1];
+            while (in > 0 && arr[in - 1] >= temp) {
+                arr[in] = arr[in - 1];
                 in--;
             }
-            storage[in] = temp;
+            arr[in] = temp;
         }
     }
 
-    private boolean binarySearch(Integer item) {
+    private boolean binarySearch(Integer[] arr, Integer item) {
         int min = 0;
         int max = size - 1;
 
         while (min <= max) {
             int mid = min + (max - min) / 2; // (min + max) / 2
 
-            if (storage[mid].compareTo(item) == 0) {
+            if (arr[mid].compareTo(item) == 0) {
                 return true;
-            } else if (storage[mid].compareTo(item) < 0) {
+            } else if (arr[mid].compareTo(item) < 0) {
                 min = mid + 1;
             } else {
                 max = mid - 1;
