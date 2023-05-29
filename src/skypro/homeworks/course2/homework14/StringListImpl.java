@@ -99,19 +99,10 @@ public class StringListImpl implements StringList {
     public String remove(final int index) {
         validateIndex(index);
         String item = storage[index];
-        if (index != size) {
-            // сдвиг элементов массива влево
-            size--;
-            System.arraycopy(storage, index + 1, storage, index, size - 1);
-        }
-
-        /*String item = storage[index];
-
         for (int i = index; i < size - 1; i++) {
             storage[i] = storage[i + 1];
         }
-        size--;*/
-
+        size--;
         return item;
     }
 
