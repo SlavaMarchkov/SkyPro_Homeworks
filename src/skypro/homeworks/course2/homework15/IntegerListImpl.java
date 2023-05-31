@@ -3,7 +3,6 @@ package skypro.homeworks.course2.homework15;
 import skypro.homeworks.course2.homework15.exceptions.ElementNotFoundException;
 import skypro.homeworks.course2.homework15.exceptions.InvalidIndexException;
 import skypro.homeworks.course2.homework15.exceptions.NullItemException;
-import skypro.homeworks.course2.homework15.exceptions.StorageIsFullException;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -11,7 +10,7 @@ import java.util.Objects;
 public class IntegerListImpl implements IntegerList {
 
     private int size;
-    private final Integer[] storage;
+    private Integer[] storage;
 
     public IntegerListImpl() {
         this(5);
@@ -23,7 +22,7 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public Integer add(final Integer item) {
-        validateSize();
+        growIfNeeded();
         validateItem(item);
         storage[size++] = item;
         return item;
@@ -31,7 +30,7 @@ public class IntegerListImpl implements IntegerList {
 
     @Override
     public Integer add(final int index, final Integer item) {
-        validateSize();
+        growIfNeeded();
         validateItem(item);
         validateIndex(index);
         if (index == size) {
@@ -77,7 +76,7 @@ public class IntegerListImpl implements IntegerList {
     @Override
     public boolean contains(final Integer item) {
         Integer[] storageCopy = toArray();
-        insertionSorting(storageCopy);
+        sort(storageCopy);
         return binarySearch(storageCopy, item);
     }
 
@@ -149,9 +148,9 @@ public class IntegerListImpl implements IntegerList {
         }
     }
 
-    private void validateSize() {
+    private void growIfNeeded() {
         if (size == storage.length) {
-            throw new StorageIsFullException("Storage is full");
+            grow();
         }
     }
 
@@ -161,17 +160,38 @@ public class IntegerListImpl implements IntegerList {
         }
     }
 
-    private void insertionSorting(Integer[] arr) {
-        int in, out;
-        for (out = 1; out < arr.length; out++) {
-            Integer temp = arr[out];
-            in = out;
-            while (in > 0 && arr[in - 1] >= temp) {
-                arr[in] = arr[in - 1];
-                in--;
-            }
-            arr[in] = temp;
+    private void sort(Integer[] arr) {
+        quickSort(arr, 0, arr.length - 1);
+    }
+
+    public static void quickSort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
         }
+    }
+
+    private static int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+    private static void swapElements(Integer[] arr, int i1, int i2) {
+        int temp = arr[i1];
+        arr[i1] = arr[i2];
+        arr[i2] = temp;
     }
 
     private boolean binarySearch(Integer[] arr, Integer item) {
@@ -191,4 +211,9 @@ public class IntegerListImpl implements IntegerList {
         }
         return false;
     }
+
+    private void grow() {
+        storage = Arrays.copyOf(storage, size + size / 2);
+    }
+
 }
