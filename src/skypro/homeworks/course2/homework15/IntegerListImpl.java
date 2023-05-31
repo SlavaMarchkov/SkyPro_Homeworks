@@ -3,7 +3,6 @@ package skypro.homeworks.course2.homework15;
 import skypro.homeworks.course2.homework15.exceptions.ElementNotFoundException;
 import skypro.homeworks.course2.homework15.exceptions.InvalidIndexException;
 import skypro.homeworks.course2.homework15.exceptions.NullItemException;
-import skypro.homeworks.course2.homework15.exceptions.StorageIsFullException;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -11,7 +10,7 @@ import java.util.Objects;
 public class IntegerListImpl implements IntegerList {
 
     private int size;
-    private final Integer[] storage;
+    private Integer[] storage;
 
     public IntegerListImpl() {
         this(5);
@@ -77,7 +76,7 @@ public class IntegerListImpl implements IntegerList {
     @Override
     public boolean contains(final Integer item) {
         Integer[] storageCopy = toArray();
-        insertionSorting(storageCopy);
+        mergeSort(storageCopy);
         return binarySearch(storageCopy, item);
     }
 
@@ -151,7 +150,7 @@ public class IntegerListImpl implements IntegerList {
 
     private void validateSize() {
         if (size == storage.length) {
-            throw new StorageIsFullException("Storage is full");
+            grow();
         }
     }
 
@@ -174,6 +173,48 @@ public class IntegerListImpl implements IntegerList {
         }
     }
 
+    public static void mergeSort(Integer[] arr) {
+        if (arr.length < 2) {
+            return;
+        }
+        int mid = arr.length / 2;
+        Integer[] left = new Integer[mid];
+        Integer[] right = new Integer[arr.length - mid];
+
+        for (int i = 0; i < left.length; i++) {
+            left[i] = arr[i];
+        }
+
+        for (int i = 0; i < right.length; i++) {
+            right[i] = arr[mid + i];
+        }
+
+        mergeSort(left);
+        mergeSort(right);
+
+        merge(arr, left, right);
+    }
+
+    public static void merge(Integer[] arr, Integer[] left, Integer[] right) {
+
+        int mainP = 0;
+        int leftP = 0;
+        int rightP = 0;
+        while (leftP < left.length && rightP < right.length) {
+            if (left[leftP] <= right[rightP]) {
+                arr[mainP++] = left[leftP++];
+            } else {
+                arr[mainP++] = right[rightP++];
+            }
+        }
+        while (leftP < left.length) {
+            arr[mainP++] = left[leftP++];
+        }
+        while (rightP < right.length) {
+            arr[mainP++] = right[rightP++];
+        }
+    }
+
     private boolean binarySearch(Integer[] arr, Integer item) {
         int min = 0;
         int max = size - 1;
@@ -191,4 +232,11 @@ public class IntegerListImpl implements IntegerList {
         }
         return false;
     }
+
+    private void grow() {
+        Integer[] newArray = new Integer[(int) (size * 1.5)];
+        System.arraycopy(storage, 0, newArray, 0, storage.length);
+        storage = newArray;
+    }
+
 }
